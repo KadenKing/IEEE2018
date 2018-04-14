@@ -9,7 +9,7 @@ from bog.msg import SetWheelSpeeds
 DISTANCE_RATIO = 0.25 #this constant will be used to determine how much to move the robot left or right. The farther away we are, the less we want to move left or right. 
 GOAL_DISTANCE_LOW = 5 # the lower bound of the goal distance from the button
 GOAL_DISTANCE_HIGH = 11 # the upper bound of the goal distance from the button
-WHEEL_SPEED = 50
+WHEEL_SPEED = 110
 
 #state variables
 current_direction = ""
@@ -27,10 +27,10 @@ class status:
 
 def forward():
     pub = rospy.Publisher('Set_Motors', SetWheelSpeeds, queue_size=10)
-    wheels.wheel1 = WHEEL_SPEED
-    wheels.wheel2 = WHEEL_SPEED
-    wheels.wheel3 = WHEEL_SPEED
-    wheels.wheel4 = WHEEL_SPEED
+    wheels.wheel1 = WHEEL_SPEED*0.6
+    wheels.wheel2 = WHEEL_SPEED*0.6
+    wheels.wheel3 = WHEEL_SPEED*0.6
+    wheels.wheel4 = WHEEL_SPEED*0.6
     pub.publish(wheels)
     time.sleep(0.5)
     wheels.wheel1 = 0
@@ -56,7 +56,7 @@ def backward():
     time.sleep(0.5)
 
 
-def left():
+def right():
     pub = rospy.Publisher('Set_Motors', SetWheelSpeeds, queue_size=10)
     wheels.wheel1 = 1*WHEEL_SPEED
     wheels.wheel2 = -1*WHEEL_SPEED
@@ -71,7 +71,7 @@ def left():
     pub.publish(wheels)
     time.sleep(0.5)
 
-def right():
+def left():
     pub = rospy.Publisher('Set_Motors', SetWheelSpeeds, queue_size=10)
     wheels.wheel1 = -1*WHEEL_SPEED
     wheels.wheel2 = 1*WHEEL_SPEED
