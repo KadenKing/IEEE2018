@@ -9,7 +9,7 @@ from bog.msg import SetWheelSpeeds
 DISTANCE_RATIO = 0.25 #this constant will be used to determine how much to move the robot left or right. The farther away we are, the less we want to move left or right. 
 GOAL_DISTANCE_LOW = 7 # the lower bound of the goal distance from the button
 GOAL_DISTANCE_HIGH = 9 # the upper bound of the goal distance from the button
-WHEEL_SPEED = 95
+WHEEL_SPEED = 120
 TIMEOUT = 0.5
 
 
@@ -60,10 +60,10 @@ def backward():
 
 def right():
     pub = rospy.Publisher('Set_Motors', SetWheelSpeeds, queue_size=10)
-    wheels.wheel1 = 1*WHEEL_SPEED*0.9
-    wheels.wheel2 = -1*WHEEL_SPEED*0.9
-    wheels.wheel3 = 1*WHEEL_SPEED*0.9
-    wheels.wheel4 = -1*WHEEL_SPEED*0.9
+    wheels.wheel1 = 1*WHEEL_SPEED*0.7
+    wheels.wheel2 = -1*WHEEL_SPEED*0.7
+    wheels.wheel3 = 1*WHEEL_SPEED*0.7
+    wheels.wheel4 = -1*WHEEL_SPEED*0.7
     pub.publish(wheels)
     time.sleep(TIMEOUT)
     wheels.wheel1 = 0
@@ -75,10 +75,10 @@ def right():
 
 def left():
     pub = rospy.Publisher('Set_Motors', SetWheelSpeeds, queue_size=10)
-    wheels.wheel1 = -1*WHEEL_SPEED*0.9
-    wheels.wheel2 = 1*WHEEL_SPEED*0.9
-    wheels.wheel3 = -1*WHEEL_SPEED*0.9
-    wheels.wheel4 = 1*WHEEL_SPEED*0.9
+    wheels.wheel1 = -1*WHEEL_SPEED*0.7
+    wheels.wheel2 = 1*WHEEL_SPEED*0.7
+    wheels.wheel3 = -1*WHEEL_SPEED*0.7
+    wheels.wheel4 = 1*WHEEL_SPEED*0.7
     pub.publish(wheels)
     time.sleep(TIMEOUT)
     wheels.wheel1 = 0
@@ -87,6 +87,31 @@ def left():
     wheels.wheel4 = 0
     pub.publish(wheels)
     time.sleep(TIMEOUT)
+
+def go(direction,distance):
+    directionDict = {"left":0, "right":1, "backward":2, "forward":3}
+    motorCoefficients = [[-1,1,-1,1],
+                        [1,-1,1,-1],
+                        [-1,-1,-1,-1],
+                        [1,1,1,1]]
+    coefSelect = directionDict[direction]
+
+    
+
+    pub = rospy.Publisher('Set_Motors', SetWheelSpeeds, queue_size=10)
+    wheels.wheel1 = WHEEL_SPEED*motorCoefficients[0][coefSelect]*0.7
+    wheels.wheel2 = WHEEL_SPEED*0.7
+    wheels.wheel3 = WHEEL_SPEED*0.7
+    wheels.wheel4 = WHEEL_SPEED*0.7
+    pub.publish(wheels)
+    time.sleep(TIMEOUT)
+    wheels.wheel1 = 0
+    wheels.wheel2 = 0
+    wheels.wheel3 = 0
+    wheels.wheel4 = 0
+    pub.publish(wheels)
+    time.sleep(TIMEOUT)
+
 
 
 
@@ -134,7 +159,7 @@ def listen():
 
     while not rospy.is_shutdown():
         if status.updated: 
-            rospy.loginfo("MOVING FORWARD")
+            #rospy.loginfo("MOVING FORWARD")
             move(current_direction,current_distance)
             status.updated = False # changed updated to false so that we do not move again based on old information
             rate.sleep()

@@ -5,6 +5,7 @@ import cv2
 import math
 from std_msgs.msg import String
 from std_msgs.msg import Float32
+ALLOWANCE = 80
 
 
 CASCADE_PATH  = "/home/kaden/Documents/ws/src/IEEE2018/bog/nodes/cascade_19.xml" #absolute path to the cascade
@@ -54,10 +55,10 @@ def vision():
             cv2.putText(img, coordinates, (25,25), font, 1, (255,255,255), 2, cv2.LINE_AA)
             cv2.putText(img, area, (25,50), font, 1, (255,255,255), 2, cv2.LINE_AA)
             
-            if(crosshair[0] > x+w): # if the box around the button is to the left of the crosshair
+            if(crosshair[0] > x+w+ALLOWANCE): # if the box around the button is to the left of the crosshair
                 direction = "left"
                 cv2.putText(img, "MOVE LEFT", (25,75), font, 1, (255,255,255), 2, cv2.LINE_AA)
-            elif(crosshair[0] < x): # to the right of the crosshair
+            elif(crosshair[0] < x-ALLOWANCE): # to the right of the crosshair
                 direction = "right"
                 cv2.putText(img, "MOVE RIGHT", (25,75), font, 1, (255,255,255), 2, cv2.LINE_AA)
 
